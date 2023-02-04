@@ -48,5 +48,8 @@ def hours_request(id):
         return (int(open['start']), int(open['end']))
     return 'Hours not available'
 
+def get_open_hours(startHour, endHour):
+    return ((startHour*60) - 540, (endHour*60) - 540)
+    
 if __name__ == "__main__":
     app.run(debug=True)
