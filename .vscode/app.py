@@ -50,11 +50,11 @@ def search_business(location, cat):
         file=open('file.txt', 'w')
         file.write(str(data))
         file.close()
-        print(data) # remove later
+        #print(data) # remove later
 
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])[0:5]
-        print(businesses)
+        #print(businesses)
         return get_info(data, cat)
 
 
@@ -69,7 +69,7 @@ def hours_request(id):
     day = datetime.datetime.now().weekday()
     open = next((hour for hour in data_b['hours'][-1]['open'] if hour['day'] == day), None) #add error handling if closed
     # open = data_b['hours'][-1]['open']
-    print(data_b["categories"])
+    #print(data_b["categories"])
     if(open != None):
         return get_open_hours(int(open['start']), int(open['end']))
     return 'Hours not available'
@@ -81,9 +81,12 @@ def get_open_hours(startHour, endHour):
     return (startMins, endMins)
 
 def get_info(data, cat):
-
-    return (cat, hours_request(data["businesses"][0]["id"]), data["businesses"][0]["name"], data["businesses"][0]["url"])
-
+    info_list = []
+    for i in range(5):
+        info_list.append((cat, hours_request(data["businesses"][i]["id"]), data["businesses"][i]["name"]))
+     #(cat, hours_request(data["businesses"][0]["id"]), data["businesses"][0]["name"])#, data["businesses"][0]["url"])
+    #print(info_list)
+    return info_list
 
 if __name__ == "__main__":
     app.run(debug=True)
