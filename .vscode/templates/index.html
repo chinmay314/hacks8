@@ -18,6 +18,8 @@
       <ul>
         {% for business in businesses %}
           <li>{{ business.name }} - {{ business.location.address1 }} - {{ hours(business.id) }}</li>
+          <li>{{ search_business('atlanta', 'food') }}</li>
+          </li>
         {% endfor %}
       </ul>
     {% else %}

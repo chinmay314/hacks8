@@ -29,9 +29,33 @@ def index():
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])
 
-        return render_template("index.html", businesses=businesses, data=data, hours=hours_request)
+        return render_template("index.html", businesses=businesses, data=data, hours=hours_request, search_business=search_business)
 
     return render_template("index.html")
+
+def search_business(location, cat):
+    if request.method == "POST":
+        # Make the API request to Yelp
+        headers = {
+            "accept": "application/json",
+            "Authorization": "Bearer " + API_KEY
+        }
+        params = {
+            "term": cat,
+            "location": location
+        }
+        response = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
+        data = response.json()
+
+        file=open('file.txt', 'w')
+        file.write(str(data))
+        file.close()
+        print(data) # remove later
+
+        # Extract the relevant information from the API response
+        businesses = data.get("businesses", [])[0:5]
+        return get_info(business)
+
 
 def hours_request(id):
     headers = {
@@ -53,6 +77,8 @@ def get_open_hours(startHour, endHour):
     startMins = (startHour // 100) * 60 + (startHour % 100) - nine_am
     endMins = (endHour // 100) * 60 + (endHour % 100) - nine_am
     return (startMins, endMins)
+
+
     
 if __name__ == "__main__":
     app.run(debug=True)
