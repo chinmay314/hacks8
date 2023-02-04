@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import requests
 import json
+import datetime
 
 app = Flask(__name__)
 
@@ -28,17 +29,6 @@ def index():
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])
 
-        # hours_open = {}
-        # for business in businesses:
-        #     # Make the API request to Yelp
-            # headers = {
-            #     "accept": "application/json",
-            #     "Authorization": "Bearer " + API_KEY
-            # }
-            # response_b = requests.get("https://api.yelp.com/v3/businesses/search" + business.id, headers=headers, params=params)
-            # data_b = response_b.json()
-            # hours_open[business.name] = data_b
-
         return render_template("index.html", businesses=businesses, data=data, hours=hours_request)
 
     return render_template("index.html")
@@ -51,8 +41,12 @@ def hours_request(id):
     url = "https://api.yelp.com/v3/businesses/" + id
     response_b = requests.get("https://api.yelp.com/v3/businesses/" + id, headers=headers)
     data_b = response_b.json()
-    open = data_b['hours'][-1]['is_open_now']
-    return open
+    day = datetime.datetime.now().weekday()
+    open = next((hour for hour in data_b['hours'][-1]['open'] if hour['day'] == day), None) #add error handling if closed
+    # open = data_b['hours'][-1]['open']
+    if(open != None):
+        return (int(open['start']), int(open['end']))
+    return 'Hours not available'
 
 if __name__ == "__main__":
     app.run(debug=True)
