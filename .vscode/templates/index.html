@@ -17,14 +17,11 @@
     {% if businesses %}
       <ul>
         {% for business in businesses %}
-          {% if business.id %}
           <li>{{ business.name }} - {{ business.location.address1 }} - {{ hours(business.id) }}</li>
           </li>
           <img src= {{business.image_url}} width="75" height="75">
-          {% endif %}
         {% endfor %}
         <li>{{ search_business('atlanta', ['food', 'burger', 'bars']) }}</li>
-        <!-- <li>{{ search_business('atlanta', ['burger'])}}</li> -->
       </ul>
     {% else %}
       <p>No results found.</p>

@@ -2,6 +2,9 @@ from flask import Flask, render_template, request
 import requests
 import json
 import datetime
+import sys
+import gen
+from sys import stderr
 
 app = Flask(__name__)
 
@@ -29,14 +32,13 @@ def index():
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])
 
-        return render_template("index.html", businesses=businesses, data=data, hours=hours_request, search_business=search_business)
+        return render_template("index.html", businesses=businesses, data=data, hours=hours_request, search_business=search_business, get_sample_schedule=get_sample_schedule)
 
     return render_template("index.html")
 
 def search_business(location, cats):
     results = []
     for cat in cats:
-        print(cat, location)
         if request.method == "POST":
             # Make the API request to Yelp
             headers = {
@@ -71,14 +73,29 @@ def hours_request(id):
     data_b = response_b.json()
     day = datetime.datetime.now().weekday()
     open = None
-    if 'hours' in data_b:
-        print(data_b['hours'])
+    if('hours' in data_b):
         open = next((hour for hour in data_b['hours'][-1]['open'] if hour['day'] == day), None) #add error handling if closed
     # open = data_b['hours'][-1]['open']
     #print(data_b["categories"])
     if(open != None):
         return get_open_hours(int(open['start']), int(open['end']))
-    return 'Hours not available'
+    return (0, 0)
+
+def get_sample_schedule(results):
+    schedules = gen.generate(results)
+    schedules = gen.rank(schedules, ["art", "nature", "music", "bars", "history"])
+    value = ""
+    counter = 1
+    for s in schedules:
+        points = s[0]
+        s = s[1]
+        value += "Schedule " + str(counter) + ": \n"
+        for e in s.getEvents():
+            value += e.getName() + " from " + str(e.getTimeRange()[0]) + " to " + str(e.getTimeRange()[1]) + "\n"
+        value += str(points) + " points total"
+        value += "\n \n"
+        counter += 1
+    return value
 
 def get_open_hours(startHour, endHour):
     nine_am = 9 * 60
