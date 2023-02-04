@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+  /*===== GOOGLE FONTS =====*/
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap");
+
+/*===== VARIABLES CSS =====*/
+:root {
+  /*===== Colors =====*/
+  --first-color: #272A3A;
+  --first-color-light: #8A8EAA;
+  --first-color-lighten: #F8F8FC;
+
+  /*===== Font and typography =====*/
+  --body-font: 'Ubuntu', sans-serif;
+  --normal-font-size: 1rem;
+  --smaller-font-size: .813rem;
+}
+
+/*===== BASE =====*/
+*,::before,::after{
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  font-family: var(--body-font);
+  background-color: var(--first-color-lighten);
+}
+
+h1{
+  margin: 0;
+}
+
+a{
+  text-decoration: none;
+}
+
+img{
+  max-width: 100%;
+  height: auto;
+}
+
+h2 {
+  text-align: center;
+  padding-top: 25px;
+}
+
+/*===== DRAG and DROP =====*/
+.drop, .drop__container{
+  display: grid;
+}
+
+.drop{
+  height: 75vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.drop__container{
+  row-gap: 1rem;
+  padding: 2rem;
+  box-shadow: 4px 4px 16px #E1E1E1;
+}
+
+.drop__card, .drop__data{
+  display: flex;
+  align-items: center;
+}
+
+.drop__card{
+  width: 360px;
+  justify-content: space-between;
+  padding: .75rem 1.25rem .75rem .75rem;
+  background-color: var(--first-color-lighten);
+  box-shadow: 4px 4px 16px #E1E1E1, -2px -2px 16px #FFF;
+  border-radius: 2.5rem;
+}
+
+.drop__img{
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.drop__name{
+  font-size: var(--normal-font-size);
+  color: var(--first-color);
+  font-weight: 500;
+}
+
+.drop__profession{
+  font-size: var(--smaller-font-size);
+  color: var(--first-color-light);
+}
+
+.drop__social{
+  margin: 0 .375rem;
+  color: var(--first-color-light);
+  transition: .4s;
+}
+
+.drop__social:hover{
+  color: var(--first-color);
+}
+
+/* Class name for the chosen item */
+.sortable-chosen{
+  box-shadow: 8px 8px 32px #E1E1E1;
+}
+
+/* Class name for the dragging item */
+.sortable-drag{
+  opacity: 0;
+}
+</style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ===== BOX ICONS ===== -->
+  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+  <title>Drag and drop card</title>
+</head>
+
+<body>
+  <div style="text-align: center;">
+    <h2 style="margin-bottom: 20px;">Please enter the following information</h2>
+    <form action="/schedule" method="post">
+      <div style="margin-bottom: 10px;">
+        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" placeholder="Enter location">
+      </div>
+      <div>
+        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" placeholder="Enter phone number">
+      </div>
+  </div>  
+  <h2> Drag and Drop Cards in Order of Preference </h2>
+  
+  <div class="drop">
+    <div class="drop__container" id="drop-items">
+      <div class="drop__card">
+        <div class="drop__data">
+          <img src="../static/musicNotes.png" alt="" class="drop__img">
+          <div>
+            <h1 class="drop__name">Music</h1>
+            <span class="drop__profession">Concerts, Live Music, etc</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="drop__card">
+        <div class="drop__data">
+          <img src="../static/beer.jpeg" alt="" class="drop__img">
+          <div>
+            <h1 class="drop__name">Bars</h1>
+            <span class="drop__profession">Clubs, Night Life, etc</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="drop__card">
+        <div class="drop__data">
+          <img src="../static/calendar.png" alt="" class="drop__img">
+          <div>
+            <h1 class="drop__name">History</h1>
+            <span class="drop__profession">History Museums, Forts, etc</span>
+          </div>
+        </div>
+      </div>
+      <div class="drop__card">
+        <div class="drop__data">
+          <img src="../static/mountain.jpeg" alt="" class="drop__img">
+          <div>
+            <h1 class="drop__name">Nature</h1>
+            <span class="drop__profession">Hikes, Rivers, Trails, etc</span>
+          </div>
+        </div>
+      </div>
+            <div class="drop__card">
+              <div class="drop__data">
+                <img src="../static/art.png" alt="" class="drop__img">
+                <div>
+                  <h1 class="drop__name">Art</h1>
+                  <span class="drop__profession">Art Museums, Studios, etc </span>
+                </div>
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <button type="submit" style="border-radius: 25px; padding: 10px 20px;background-color: white;">Submit</button>
+            </div>
+          </form>
+
+          <script>
+            $(document).ready(function() {
+              $("#send-request").click(function() {
+                var data = {
+                  "location": "atlanta",
+                  "prefs": "[ 'music','history','bars','nature','art' ]"
+                };
+                
+                $.ajax({
+                  type: "POST",
+                  url: "/schedule",
+                  data: JSON.stringify(data),
+                  contentType: "application/json",
+                  success: function(response) {
+                    console.log(response);
+                  }
+                });
+              });
+            });
+          </script>
+          <button id="send-request">Send POST Request</button>
+            
+    </div>
+  </div>
+
+
+  <!--===== SORTABLE JS =====-->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+  <!--===== MAIN JS =====-->
+  <script>
+    const dropItems = document.getElementById('drop-items')
+
+    new Sortable(dropItems, {
+       animation: 350,
+       chosenClass: "sortable-chosen",
+       dragClass: "sortable-drag",
+    });
+  </script>
+</body>
+
+</html>
