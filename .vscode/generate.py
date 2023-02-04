@@ -47,9 +47,9 @@ class e:
     def getActivityType(self):
         return self.activityType
 
-allEvents = [e("Nature trail1", "nature"), e("Museum1", "history"), e("Exhibition1", "art"), e("Exhibition2", "art"),
-             e("Nature trail2", "nature"), e("Museum2", "history"), e("Bar1", "bars"), e("Bar2", "bars"),
-             e("Live concert 1", "music"), e("Live concert 2", "music")]
+allEvents = [("nature", (0, 0), "Nature trail1"), ("nature", (0, 0), "Nature trail2"), ("music", (0, 0), "Concert1"), ("music", (0, 0), "Concert2"),
+             ("bars", (0, 0), "Bar1"), ("bars", (0, 0), "Bar2"), ("art", (0, 0), "Art museum1"), ("art", (0, 0), "Art museum2"),
+             ("history", (0, 0), "WW2 museum"), ("history", (0, 0), "WW1 museum")]
 
 def generate(allEvents):
     times = {
@@ -89,22 +89,26 @@ def generate(allEvents):
             stack.append(s)
             continue
         for e in allEvents:
-            if (e.getActivityType() == "bars" or e.getActivityType() == "music") and s.getActivitiesAdded()["food"] != 2:
-                continue
-            if e.getActivityType() == "nature" and s.getActivitiesAdded()["food"] >= 1:
-                continue
-            if s.getActivitiesAdded()[e.getActivityType()] == 2 or e.getName() in s.getNames():
-                continue
-            eventsNew = s.getEvents().copy()
-            eventsNew.append(event(e.getName(), (s.getNextTimeSlot(), s.getNextTimeSlot() + times[e.getActivityType()]),
-                                   e.getActivityType()))
-            newActivitiesAdded = s.getActivitiesAdded().copy()
-            newActivitiesAdded[e.getActivityType()] += 1
-            nts = s.getNextTimeSlot() + times[e.getActivityType()] + 35
-            newnames = s.getNames().copy()
-            newnames.append(e.getName())
-            snew = schedule(eventsNew, newActivitiesAdded, nts, newnames)
-            stack.append(snew)
+         if (e[0] == "bars" or e[0] == "music") and s.getActivitiesAdded()["food"] != 2:
+               continue
+         if e[0] == "nature" and s.getActivitiesAdded()["food"] >= 1:
+               continue
+         if s.getActivitiesAdded()[e[0]] == 2 or e[2] in s.getNames():
+               continue
+         e[1][0] = max(e[0], 0)
+         finaltime = s.getNextTimeSlot() + times[e[0]]
+         if s.getNextTimeSlot() < e[1][0] or (finaltime > e[1][1] and e[1][1] != 0):
+            continue
+         eventsNew = s.getEvents().copy()
+         eventsNew.append(event(e[2], (s.getNextTimeSlot(), s.getNextTimeSlot() + times[e[0]]),
+                                 e[0]))
+         newActivitiesAdded = s.getActivitiesAdded().copy()
+         newActivitiesAdded[e[0]] += 1
+         nts = s.getNextTimeSlot() + times[e[0]] + 35
+         newnames = s.getNames().copy()
+         newnames.append(e[2])
+         snew = schedule(eventsNew, newActivitiesAdded, nts, newnames)
+         stack.append(snew)
     return finalSchedules
 
 def rank(schedules, preferences):
