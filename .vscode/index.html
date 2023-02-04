@@ -1,26 +1,27 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-      function searchAttractions() {
-        var keyword = $("#keyword").val();
-        var location = $("#location").val();
-        $.ajax({
-          url: `https://api.yelp.com/v3/businesses/search?term=${keyword}&location=${location}`,
-          headers: {
-            "Authorization": "Bearer <YOUR_API_KEY>"
-          },
-          success: function(data) {
-            console.log(data);
-          }
-        });
-      }
-    </script>
+    <title>Yelp Search</title>
   </head>
   <body>
-    <input type="text" id="keyword" placeholder="Keyword">
-    <input type="text" id="location" placeholder="Location">
-    <button onclick="searchAttractions()">Search</button>
+    <h1>Yelp Search</h1>
+    <form method="post">
+      <label>Location:</label>
+      <input type="text" name="location">
+      <br><br>
+      <label>Keyword:</label>
+      <input type="text" name="keyword">
+      <br><br>
+      <input type="submit" value="Search">
+    </form>
+    <h2>Results</h2>
+    {% if businesses %}
+      <ul>
+        {% for business in businesses %}
+          <li>{{ business.name }} - {{ business.location.address1 }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results found.</p>
+    {% endif %}
   </body>
 </html>
