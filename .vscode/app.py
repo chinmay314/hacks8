@@ -45,11 +45,14 @@ def hours_request(id):
     open = next((hour for hour in data_b['hours'][-1]['open'] if hour['day'] == day), None) #add error handling if closed
     # open = data_b['hours'][-1]['open']
     if(open != None):
-        return (int(open['start']), int(open['end']))
+        return get_open_hours(int(open['start']), int(open['end']))
     return 'Hours not available'
 
 def get_open_hours(startHour, endHour):
-    return ((startHour*60) - 540, (endHour*60) - 540)
+    nine_am = 9 * 60
+    startMins = (startHour // 100) * 60 + (startHour % 100) - nine_am
+    endMins = (endHour // 100) * 60 + (endHour % 100) - nine_am
+    return (startMins, endMins)
     
 if __name__ == "__main__":
     app.run(debug=True)
