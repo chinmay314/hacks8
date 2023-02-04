@@ -70,7 +70,10 @@ def hours_request(id):
     response_b = requests.get("https://api.yelp.com/v3/businesses/" + id, headers=headers)
     data_b = response_b.json()
     day = datetime.datetime.now().weekday()
-    open = next((hour for hour in data_b['hours'][-1]['open'] if hour['day'] == day), None) #add error handling if closed
+    open = None
+    if 'hours' in data_b:
+        print(data_b['hours'])
+        open = next((hour for hour in data_b['hours'][-1]['open'] if hour['day'] == day), None) #add error handling if closed
     # open = data_b['hours'][-1]['open']
     #print(data_b["categories"])
     if(open != None):
