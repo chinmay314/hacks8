@@ -51,5 +51,8 @@ def hours_request(id):
     data_b = response_b.json()
     open = response_b
 
+def get_open_hours(startHour, endHour):
+    return ((startHour*60) - 540, (endHour*60) - 540)
+    
 if __name__ == "__main__":
     app.run(debug=True)
