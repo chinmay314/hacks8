@@ -54,7 +54,8 @@ def search_business(location, cat):
 
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])[0:5]
-        return get_info(business)
+        print(businesses)
+        return get_info(businesses, cat)
 
 
 def hours_request(id):
