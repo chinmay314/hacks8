@@ -27,9 +27,29 @@ def index():
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])
 
-        return render_template("index.html", businesses=businesses)
+        # hours_open = {}
+        # for business in businesses:
+        #     # Make the API request to Yelp
+            # headers = {
+            #     "accept": "application/json",
+            #     "Authorization": "Bearer " + API_KEY
+            # }
+            # response_b = requests.get("https://api.yelp.com/v3/businesses/search" + business.id, headers=headers, params=params)
+            # data_b = response_b.json()
+            # hours_open[business.name] = data_b
+
+        return render_template("index.html", businesses=businesses, data=data, hours=hours_request)
 
     return render_template("index.html")
+
+def hours_request(id):
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer " + API_KEY
+    }
+    response_b = requests.get("https://api.yelp.com/v3/businesses/" + id, headers=headers)
+    data_b = response_b.json()
+    open = response_b
 
 if __name__ == "__main__":
     app.run(debug=True)

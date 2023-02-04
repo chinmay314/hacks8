@@ -17,7 +17,7 @@
     {% if businesses %}
       <ul>
         {% for business in businesses %}
-          <li>{{ business.name }} - {{ business.location.address1 }}</li>
+          <li>{{ business.name }} - {{ business.location.address1 }} - {{ hours(business.id) }}</li>
         {% endfor %}
       </ul>
     {% else %}
