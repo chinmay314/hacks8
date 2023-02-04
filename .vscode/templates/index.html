@@ -20,6 +20,7 @@
           <li>{{ business.name }} - {{ business.location.address1 }} - {{ hours(business.id) }}</li>
           <li>{{ search_business('atlanta', 'food') }}</li>
           </li>
+          <img src= {{business.image_url}} width="75" height="75">
         {% endfor %}
       </ul>
     {% else %}
