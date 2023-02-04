@@ -18,6 +18,7 @@
       <ul>
         {% for business in businesses %}
           <li>{{ business.name }} - {{ business.location.address1 }}</li>
+          <img src= {{business.image_url}} width="75" height="75">
         {% endfor %}
       </ul>
     {% else %}
