@@ -33,29 +33,31 @@ def index():
 
     return render_template("index.html")
 
-def search_business(location, cat):
-    if request.method == "POST":
-        # Make the API request to Yelp
-        headers = {
-            "accept": "application/json",
-            "Authorization": "Bearer " + API_KEY
-        }
-        params = {
-            "term": cat,
-            "location": location
-        }
-        response = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
-        data = response.json()
+def search_business(location, cats):
+    results = []
+    for cat in cats:
+        if request.method == "POST":
+            # Make the API request to Yelp
+            headers = {
+                "accept": "application/json",
+                "Authorization": "Bearer " + API_KEY
+            }
+            params = {
+                "term": cats,
+                "location": location
+            }
+            response = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
+            data = response.json()
+            # file=open('file.txt', 'w')
+            # file.write(str(data))
+            # file.close()
+            # print(data) # remove later
 
-        file=open('file.txt', 'w')
-        file.write(str(data))
-        file.close()
-        #print(data) # remove later
-
-        # Extract the relevant information from the API response
-        businesses = data.get("businesses", [])[0:5]
-        #print(businesses)
-        return get_info(data, cat)
+            # Extract the relevant information from the API response
+        results += get_info(data, cat)
+    
+    
+    return results
 
 
 def hours_request(id):
