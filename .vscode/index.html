@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      function searchAttractions() {
+        var keyword = $("#keyword").val();
+        var location = $("#location").val();
+        $.ajax({
+          url: `https://api.yelp.com/v3/businesses/search?term=${keyword}&location=${location}`,
+          headers: {
+            "Authorization": "Bearer <YOUR_API_KEY>"
+          },
+          success: function(data) {
+            console.log(data);
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <input type="text" id="keyword" placeholder="Keyword">
+    <input type="text" id="location" placeholder="Location">
+    <button onclick="searchAttractions()">Search</button>
+  </body>
+</html>
