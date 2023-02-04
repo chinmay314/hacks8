@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import requests
+import json
 
 app = Flask(__name__)
 
@@ -47,9 +48,11 @@ def hours_request(id):
         "accept": "application/json",
         "Authorization": "Bearer " + API_KEY
     }
+    url = "https://api.yelp.com/v3/businesses/" + id
     response_b = requests.get("https://api.yelp.com/v3/businesses/" + id, headers=headers)
     data_b = response_b.json()
-    open = response_b
+    open = data_b['hours'][-1]['is_open_now']
+    return open
 
 def get_open_hours(startHour, endHour):
     return ((startHour*60) - 540, (endHour*60) - 540)
