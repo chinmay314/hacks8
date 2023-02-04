@@ -36,6 +36,7 @@ def index():
 def search_business(location, cats):
     results = []
     for cat in cats:
+        print(cat, location)
         if request.method == "POST":
             # Make the API request to Yelp
             headers = {
@@ -43,7 +44,7 @@ def search_business(location, cats):
                 "Authorization": "Bearer " + API_KEY
             }
             params = {
-                "term": cats,
+                "term": cat,
                 "location": location
             }
             response = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
