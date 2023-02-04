@@ -11,6 +11,19 @@ app = Flask(__name__)
 # Replace YOUR_API_KEY with your Yelp API key
 API_KEY = "G0Sc2cgk4qWgBTWY4B17uUaYfaX6YbqnFBwm1KtuqQW25MzaMKPJJY50tJsybkJjnX3ZuoVsEVEK2tlsLlisA5tuV7gBFCE7rFP5_dq01VNrZZW4vgwidCFN5sjdY3Yx"
 
+@app.route("/index")
+def rank():
+    return render_template("index.html")
+
+@app.route("/schedule", methods=["POST"])
+def schedule():
+    location = request.form['location']
+    phone_number = request.form['phone_number']
+    print(location)
+    print(phone_number)
+    return render_template("schedule.html")
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -34,7 +47,7 @@ def index():
 
         return render_template("index.html", businesses=businesses, data=data, hours=hours_request, search_business=search_business, get_sample_schedule=get_sample_schedule)
 
-    return render_template("index.html")
+    return render_template("rank.html")
 
 def search_business(location, cats):
     results = []
