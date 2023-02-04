@@ -22,6 +22,7 @@
           <img src= {{business.image_url}} width="75" height="75">
         {% endfor %}
         <li>{{ search_business('atlanta', ['food', 'burger', 'bars']) }}</li>
+        <li>{{get_sample_schedule(search_business('atlanta', ['bars', 'music', 'art', 'history', 'nature']))}}</li>
         <!-- <li>{{ search_business('atlanta', ['burger'])}}</li> -->
       </ul>
     {% else %}
