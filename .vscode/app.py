@@ -80,8 +80,7 @@ def get_open_hours(startHour, endHour):
     return (startMins, endMins)
 
 def get_info(data, cat):
-    open = next((hour for hour in data['hours'][-1]['open'] if hour['day'] == datetime.datetime.now().weekday()), None) #add error handling if closed
-    return (cat, get_open_hours(int(open['start']), int(open['end'])), data["name"], data["url"])
+    return (cat, get_open_hours(hours_request(data["id"])), data["name"], data["url"])
 
 
 if __name__ == "__main__":
