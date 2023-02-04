@@ -55,7 +55,7 @@ def search_business(location, cat):
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])[0:5]
         print(businesses)
-        return get_info(businesses, cat)
+        return get_info(data, cat)
 
 
 def hours_request(id):
@@ -81,7 +81,8 @@ def get_open_hours(startHour, endHour):
     return (startMins, endMins)
 
 def get_info(data, cat):
-    return (cat, get_open_hours(hours_request(data["id"])), data["name"], data["url"])
+
+    return (cat, hours_request(data["businesses"][0]["id"]), data["businesses"][0]["name"], data["businesses"][0]["url"])
 
 
 if __name__ == "__main__":
