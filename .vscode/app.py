@@ -68,6 +68,7 @@ def hours_request(id):
     day = datetime.datetime.now().weekday()
     open = next((hour for hour in data_b['hours'][-1]['open'] if hour['day'] == day), None) #add error handling if closed
     # open = data_b['hours'][-1]['open']
+    print(data_b["categories"])
     if(open != None):
         return get_open_hours(int(open['start']), int(open['end']))
     return 'Hours not available'
@@ -78,7 +79,10 @@ def get_open_hours(startHour, endHour):
     endMins = (endHour // 100) * 60 + (endHour % 100) - nine_am
     return (startMins, endMins)
 
+def get_info(data, cat):
+    open = next((hour for hour in data['hours'][-1]['open'] if hour['day'] == datetime.datetime.now().weekday()), None) #add error handling if closed
+    return (cat, get_open_hours(int(open['start']), int(open['end'])), data["name"], data["url"])
 
-    
+
 if __name__ == "__main__":
     app.run(debug=True)
