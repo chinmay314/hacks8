@@ -83,7 +83,8 @@ def get_open_hours(startHour, endHour):
     return (startMins, endMins)
 
 def get_info(data, cat):
-    return (cat, get_open_hours(hours_request(data["id"])), data["name"], data["url"])
+
+    return (cat, hours_request(data["businesses"][0]["id"]), data["businesses"][0]["name"], data["businesses"][0]["url"])
 
 
 if __name__ == "__main__":
