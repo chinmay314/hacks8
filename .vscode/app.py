@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # Replace YOUR_API_KEY with your Yelp API key
-API_KEY = "YOUR_API_KEY"
+API_KEY = "G0Sc2cgk4qWgBTWY4B17uUaYfaX6YbqnFBwm1KtuqQW25MzaMKPJJY50tJsybkJjnX3ZuoVsEVEK2tlsLlisA5tuV7gBFCE7rFP5_dq01VNrZZW4vgwidCFN5sjdY3Yx"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -15,7 +15,7 @@ def index():
         # Make the API request to Yelp
         headers = {
             "accept": "application/json",
-            "Authorization": "Bearer " + G0Sc2cgk4qWgBTWY4B17uUaYfaX6YbqnFBwm1KtuqQW25MzaMKPJJY50tJsybkJjnX3ZuoVsEVEK2tlsLlisA5tuV7gBFCE7rFP5_dq01VNrZZW4vgwidCFN5sjdY3Yx
+            "Authorization": "Bearer " + API_KEY
         }
         params = {
             "term": keyword,
