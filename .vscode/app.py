@@ -21,14 +21,15 @@ def rank():
 
 
 phone = None
-@app.route("/confirmation", methods=["GET"])
+@app.route("/confirmation", methods=["GET", 'POST'])
 def confirmation():
     global phone
     # print(phone)
     # send_message('test',phone)
 
-    schedule_block = request.form.get('var')
-    print(schedule_block)
+    if request.method == "POST":
+        print("hello");
+        print(request.form.get('id'));
 
     return render_template("confirmation.html")
 

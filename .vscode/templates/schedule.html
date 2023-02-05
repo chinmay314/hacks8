@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script>document.getElementsByTagName("html")[0].className += " js";</script>
@@ -51,23 +52,34 @@
 
         {% for schedule in schedule_list %}
         <li class="cd-schedule__group">
-          <div class="cd-schedule__top-info"><span> <a href="/confirmation" id="{{schedule.id}}" onclick="sendPostRequest('/confirmation')">Pick Schedule</a></span></div>
-
+          <div class="cd-schedule__top-info"><span> <a href="/confirmation" type="submit" id="{{schedule.id}}" onclick="sendPostRequest('/confirmation')">Pick Schedule</a></span></div>
           <script>
-            function sendPostRequest(url) {
-              const form = document.createElement('form');
-              form.method = 'post';
-              form.action = url;
-          
-              const hiddenField = document.createElement('input');
-              hiddenField.type = 'hidden';
-              hiddenField.name = 'var';
-              hiddenField.value = id;
-          
-              form.appendChild(hiddenField);
-              document.body.appendChild(form);
-              form.submit();
-            }
+
+            $(document).ready(function(){
+              $("#0").click(function(){
+                $.post('/confirmation', {'id': 0}, function(response){
+
+                });
+              });
+              $("#100").click(function(){
+                $.post('/confirmation', {'id': 100}, function(response){
+
+                });
+              });
+              $("#200").click(function(){
+                $.post('/confirmation', {'id': 200}, function(response){
+
+                });
+              });              
+            });
+            // function sendPostRequest(url) {
+            //   $("#form").submit(function(eventOjb){})
+            //   let myId = event.srcElement.id
+            //   $("<input />").attr("type", "hidden")
+            //   .attr("name", "id")
+            //   .attr("value", myId)
+            //   .appendTo("#form")
+            // }
           </script>
 
 

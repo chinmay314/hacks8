@@ -39,6 +39,8 @@ class schedule:
         return self.names
     def getPoints(self):
         return self.points
+    def setPoints(self, points):
+        self.points = points
     def getId(self):
         return self.id
     def setId(self, id):
@@ -127,7 +129,6 @@ def generate(allEvents):
 
 def rank(schedules, preferences):
     ranked = []
-    max = 0
     for s in schedules:
         points = 0
         for i in range(5):
@@ -136,13 +137,9 @@ def rank(schedules, preferences):
                 points += 20*(i+1)
             if amount == 2:
                 points += 1.5*20*(i+1)
-        counter = 0
-        for r in ranked:
-            if points <= r.getPoints():
-                ranked.insert(counter-1, s)
-            counter+=1
-        if counter==0:
-            ranked.append(s)
+        s.setPoints(points)
+        ranked.append(s)
+    sorted(ranked, key=lambda x: x.getPoints())
     counter = 0
     for r in ranked:
         r.setId(counter)
@@ -152,7 +149,13 @@ def rank(schedules, preferences):
 
 
 
-
+def to_string(schedule):
+    value = ""
+    counter = 1
+    for e in schedule.getEvents():
+        value += "Event #" + str(counter) + ": \n" + e.getName() + " from " + str(e.getTimeRange()[0]) + " to " + str(e.getTimeRange()[1]) + "\n"
+        counter+=1
+    print(value)
 
 
 schedules = generate(allEvents)
