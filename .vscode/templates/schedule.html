@@ -51,7 +51,7 @@
 
         {% for schedule in schedule_list %}
         <li class="cd-schedule__group">
-          <div class="cd-schedule__top-info"><span>Monday</span></div>
+          <div class="cd-schedule__top-info"><span href="/confirmation"> Pick Schedule </span></div>
           <ul>
             {% for event in schedule.getEvents() %}
               <li class="cd-schedule__event">

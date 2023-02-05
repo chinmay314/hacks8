@@ -6,6 +6,7 @@ import sys
 import gen
 from sys import stderr
 from msg_app import send_message
+from twilio.rest import Client
 
 app = Flask(__name__)
 
