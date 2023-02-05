@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/Users/nikitajha/Documents/NikitaFinal/School and Extracurriculats/College/UGA/UgaHacks8/.vscode/myproject/bin/python3" "$0" "$@"
-' '''
+#!/Users/anish/codingprojects/hacks8/.vscode/myproject/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
