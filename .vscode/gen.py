@@ -17,13 +17,14 @@ class event:
 
 
 class schedule:
-    def __init__(self, events, activitiesAdded, nextTimeSlot, names, points):
+    def __init__(self, events, activitiesAdded, nextTimeSlot, names, points, id):
         # list of events(event objects), dict of activity types added, next time slot available
         self.events = events
         self.activitiesAdded = activitiesAdded
         self.nextTimeSlot = nextTimeSlot
         self.names = names
         self.points = points
+        self.id = id
 
     def getEvents(self):
         return self.events
@@ -38,6 +39,10 @@ class schedule:
         return self.names
     def getPoints(self):
         return self.points
+    def getId(self):
+        return self.id
+    def setId(self, id):
+        self.id = id
 
 
 class e:
@@ -74,7 +79,7 @@ def generate(allEvents):
         "music": 0
     }
     finalSchedules = []
-    stack.append(schedule(eventsStart, activitiesAdded, 0, startnames, 0))
+    stack.append(schedule(eventsStart, activitiesAdded, 0, startnames, 0, 0))
     while (len(stack) != 0):
         s = stack.pop()
         if s.nextTimeSlot >= 840:
@@ -116,12 +121,13 @@ def generate(allEvents):
             nts = finishtime + random.randint(1, 3)*15
             newnames = s.getNames().copy()
             newnames.append(e[2])
-            snew = schedule(eventsNew, newActivitiesAdded, nts, newnames, 0)
+            snew = schedule(eventsNew, newActivitiesAdded, nts, newnames, 0, 0)
             stack.append(snew)
     return finalSchedules
 
 def rank(schedules, preferences):
     ranked = []
+    max = 0
     for s in schedules:
         points = 0
         for i in range(5):
@@ -132,12 +138,15 @@ def rank(schedules, preferences):
                 points += 1.5*20*(i+1)
         counter = 0
         for r in ranked:
-            if r.getPoints() <= points:
-                ranked.insert(counter, s)
-                break
+            if points >= r.getPoints():
+                ranked.insert(counter-1, s)
             counter+=1
-        if counter == 0:
+        if counter==0:
             ranked.append(s)
+    counter = 0
+    for r in ranked:
+        r.setId(counter)
+        counter+=1
     return ranked
 
 

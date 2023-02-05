@@ -7,6 +7,7 @@ import gen
 from sys import stderr
 from msg_app import send_message
 from twilio.rest import Client
+from msg_app import *
 
 app = Flask(__name__)
 
@@ -19,9 +20,15 @@ def rank():
     return render_template("rank.html")
 
 
+phone = None
+@app.route("/confirmation", methods=["GET"])
+def confirmation():
+    global phone
+    print(phone)
+    send_message('test',phone)
+    return render_template("confirmation.html")
 
-
-@app.route("/index", methods=["POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     #print(request.method)
     if request.method == "POST":
@@ -99,9 +106,11 @@ def hours_request(id):
     return (0,0)
 
 
-def get_sample_schedule(results):
+def get_sample_schedule(results, prefs):
     schedules = gen.generate(results)
-    schedules = gen.rank(schedules, ["art", "nature", "music", "bars", "history"])
+    # schedules = gen.rank(schedules, ["art", "nature", "music", "bars", "history"])
+    schedules = gen.rank(schedules, prefs)
+
     value = ""
     counter = 1
     temp = []
@@ -115,6 +124,7 @@ def get_sample_schedule(results):
         value += "\n \n"
         counter += 1
     # return value
+    print(schedules[0].getId())
     return schedules[0:201:100]
 
 def get_open_hours(startHour, endHour):
@@ -150,7 +160,7 @@ def format_time(time):
 
 @app.route("/schedule", methods=["GET", "POST"])
 def schedule():
-    
+    global phone
     location = request.form.get("location")
     # print(request.method)
     phone_number = request.form.get("phone")
@@ -193,7 +203,7 @@ def schedule():
     print(preferences)
 
     # schedule_list = get_sample_schedule(search_business('new york city', ['music','history','bars','nature','art']))
-    schedule_list = get_sample_schedule(search_business(location, preferences))
+    schedule_list = get_sample_schedule(search_business(location, preferences),preferences)
 
     print(location)
     return render_template("schedule.html",format_time=format_time, businesses=businesses,location=location, phone_number=phone_number, search_business=search_business, get_sample_schedule=get_sample_schedule, schedule_list=schedule_list)

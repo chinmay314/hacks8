@@ -51,7 +51,7 @@
 
         {% for schedule in schedule_list %}
         <li class="cd-schedule__group">
-          <div class="cd-schedule__top-info"><span href="/confirmation"> Pick Schedule </span></div>
+          <div class="cd-schedule__top-info"><span> <a href="/confirmation" id="{{schedule.id}}">Pick Schedule</a></span></div>
           <ul>
             {% for event in schedule.getEvents() %}
               <li class="cd-schedule__event">
