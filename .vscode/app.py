@@ -11,6 +11,7 @@ app = Flask(__name__)
 # Replace YOUR_API_KEY with your Yelp API key
 API_KEY = "G0Sc2cgk4qWgBTWY4B17uUaYfaX6YbqnFBwm1KtuqQW25MzaMKPJJY50tJsybkJjnX3ZuoVsEVEK2tlsLlisA5tuV7gBFCE7rFP5_dq01VNrZZW4vgwidCFN5sjdY3Yx"
 
+
 @app.route("/index")
 def rank():
     return render_template("index.html")
@@ -22,7 +23,6 @@ def schedule():
     print(location)
     print(phone_number)
     return render_template("schedule.html")
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -49,6 +49,12 @@ def index():
 
     return render_template("rank.html")
 
+
+startTime = []
+endTime = []
+event_names = []
+event_urls =[]
+
 def search_business(location, cats):
     results = []
     for cat in cats:
@@ -72,7 +78,6 @@ def search_business(location, cats):
             # Extract the relevant information from the API response
         results += get_info(data, cat)
     
-    
     return results
 
 
@@ -94,6 +99,7 @@ def hours_request(id):
         return get_open_hours(int(open['start']), int(open['end']))
     return (0, 0)
 
+
 def get_sample_schedule(results):
     schedules = gen.generate(results)
     schedules = gen.rank(schedules, ["art", "nature", "music", "bars", "history"])
@@ -105,6 +111,10 @@ def get_sample_schedule(results):
         value += "Schedule " + str(counter) + ": \n"
         for e in s.getEvents():
             value += e.getName() + " from " + str(e.getTimeRange()[0]) + " to " + str(e.getTimeRange()[1]) + "\n"
+            startTime.append(e.getTimeRange()[0])
+            endTime.append(e.getTimeRange()[1])
+            event_names.append(e.getName())
+            event_urls
         value += str(points) + " points total"
         value += "\n \n"
         counter += 1
@@ -124,5 +134,16 @@ def get_info(data, cat):
     #print(info_list)
     return info_list
 
+
+
+"""
+Variables needed to be pulled:
+- start time, end time
+- event name
+- url
+"""
+
 if __name__ == "__main__":
     app.run(debug=True)
+
+
