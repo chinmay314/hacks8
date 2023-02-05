@@ -138,7 +138,7 @@ def rank(schedules, preferences):
                 points += 1.5*20*(i+1)
         counter = 0
         for r in ranked:
-            if points >= r.getPoints():
+            if points <= r.getPoints():
                 ranked.insert(counter-1, s)
             counter+=1
         if counter==0:

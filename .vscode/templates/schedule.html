@@ -51,7 +51,26 @@
 
         {% for schedule in schedule_list %}
         <li class="cd-schedule__group">
-          <div class="cd-schedule__top-info"><span> <a href="/confirmation" id="{{schedule.id}}">Pick Schedule</a></span></div>
+          <div class="cd-schedule__top-info"><span> <a href="/confirmation" id="{{schedule.id}}" onclick="sendPostRequest('/confirmation')">Pick Schedule</a></span></div>
+
+          <script>
+            function sendPostRequest(url) {
+              const form = document.createElement('form');
+              form.method = 'post';
+              form.action = url;
+          
+              const hiddenField = document.createElement('input');
+              hiddenField.type = 'hidden';
+              hiddenField.name = 'var';
+              hiddenField.value = id;
+          
+              form.appendChild(hiddenField);
+              document.body.appendChild(form);
+              form.submit();
+            }
+          </script>
+
+
           <ul>
             {% for event in schedule.getEvents() %}
               <li class="cd-schedule__event">

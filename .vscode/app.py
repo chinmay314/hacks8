@@ -24,8 +24,12 @@ phone = None
 @app.route("/confirmation", methods=["GET"])
 def confirmation():
     global phone
-    print(phone)
-    send_message('test',phone)
+    # print(phone)
+    # send_message('test',phone)
+
+    schedule_block = request.form.get('var')
+    print(schedule_block)
+
     return render_template("confirmation.html")
 
 @app.route("/", methods=["GET", "POST"])
