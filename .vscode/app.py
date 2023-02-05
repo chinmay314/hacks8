@@ -5,6 +5,7 @@ import datetime
 import sys
 import gen
 from sys import stderr
+from msg_app import send_message
 
 app = Flask(__name__)
 
