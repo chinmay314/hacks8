@@ -5,12 +5,12 @@ import datetime
 import sys
 import gen
 from sys import stderr
+from msg_app import send_message
 
 app = Flask(__name__)
 
 # Replace YOUR_API_KEY with your Yelp API key
-API_KEY = "G0Sc2cgk4qWgBTWY4B17uUaYfaX6YbqnFBwm1KtuqQW25MzaMKPJJY50tJsybkJjnX3ZuoVsEVEK2tlsLlisA5tuV7gBFCE7rFP5_dq01VNrZZW4vgwidCFN5sjdY3Yx"
-
+API_KEY = "Kw3oLl3tz6AKaYRB-rVeDb37F_Jv_oqmll4XN7B87mMDIifOj9wMwAQxdNvj_-X8hwfb-47-LWnm1f2q03TN6PoVONJJnQg4R4cE2mEjdsNZmfQ9WWP1ZEGIAUvfY3Yx"
 
 @app.route("/")
 def rank():
@@ -168,7 +168,10 @@ def schedule():
         # Make the API request to Yelp
         
         #test_schedule = ('atlanta', [ 'music','history','bars','nature','art' ])
-    print(location)
+    message_to_send = ""
+    for i in range(5):
+        message_to_send += f"(test) Your Schedule \nMonday{i}\nTues{i}\nWed{i}\nThu{i}Fri{i}\n"
+    send_message(message_to_send, "7064616521")
     return render_template("schedule.html",format_time=format_time, businesses=businesses,location=location, phone_number=phone_number, search_business=search_business, get_sample_schedule=get_sample_schedule)
 
 if __name__ == "__main__":
