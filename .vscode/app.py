@@ -12,10 +12,20 @@ def rank():
 
 @app.route("/schedule", methods=["POST"])
 def schedule():
-    location = request.form['location']
-    phone_number = request.form['phone_number']
-    print(location)
-    print(phone_number)
+    location = request.form["location"]
+    phone = request.form["phone_number"]
+    list = [request.form["pref1"], request.form["pref2"], request.form["pref3"], request.form["pref4"], request.form["pref5"]]
+    elements = {
+        "6wb": "music",
+        "7ax": "history",
+        "7z4": "art",
+        "6j7": "bars",
+        "70x": "nature"
+    }
+    preferences = []
+    for i in list:
+        preferences.append(elements[i])
+    print(preferences)
     return render_template("schedule.html")
 
 
@@ -24,7 +34,6 @@ def index():
     if request.method == "POST":
         location = request.form.get("location")
         keyword = request.form.get("keyword")
-
         # Make the API request to Yelp
         headers = {
             "accept": "application/json",
