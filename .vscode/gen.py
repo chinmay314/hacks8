@@ -77,7 +77,7 @@ def generate(allEvents):
     stack.append(schedule(eventsStart, activitiesAdded, 0, startnames, 0))
     while (len(stack) != 0):
         s = stack.pop()
-        if s.nextTimeSlot >= 900:
+        if s.nextTimeSlot >= 840:
             finalSchedules.append(s)
             continue
         if 120 <= s.getNextTimeSlot() <= 300 and s.getActivitiesAdded()["food"] == 0:
@@ -93,8 +93,6 @@ def generate(allEvents):
             stack.append(s)
             continue
         for e in allEvents:
-            if "Goat" in e[2]:
-                print("HERE" + str(e[0])) 
             if e[0] == "food":
                 continue
             if (e[0] == "bars" or e[0] == "music") and s.getActivitiesAdded()["food"] != 2:
@@ -109,11 +107,13 @@ def generate(allEvents):
             if s.getNextTimeSlot() < max(e[1][0], 0) or (int(finaltime) > int(e[1][1]) and e[1][1] != 0):
                 continue
             eventsNew = s.getEvents().copy()
-            eventsNew.append(event(e[2], (s.getNextTimeSlot(), s.getNextTimeSlot() + times[e[0]]),
+            finishtime = min(s.getNextTimeSlot() + times[e[0]], 840)
+
+            eventsNew.append(event(e[2], (s.getNextTimeSlot(), finishtime),
                                     e[0]))
             newActivitiesAdded = s.getActivitiesAdded().copy()
             newActivitiesAdded[e[0]] += 1
-            nts = s.getNextTimeSlot() + times[e[0]] + random.randint(1, 3)*15
+            nts = finishtime + random.randint(1, 3)*15
             newnames = s.getNames().copy()
             newnames.append(e[2])
             snew = schedule(eventsNew, newActivitiesAdded, nts, newnames, 0)
