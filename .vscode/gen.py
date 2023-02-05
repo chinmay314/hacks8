@@ -1,3 +1,4 @@
+import random
 class event:
     def __init__(self, name, timeRange, activityType):
         # name of event, tuple range of times, type of activity
@@ -82,13 +83,13 @@ def generate(allEvents):
         if 120 <= s.getNextTimeSlot() <= 300 and s.getActivitiesAdded()["food"] == 0:
             s.events.append(event("Lunch", (s.getNextTimeSlot(), s.getNextTimeSlot() + 90), "food1"))
             s.getActivitiesAdded()["food"] = 1
-            s.nextTimeSlot += 125
+            s.nextTimeSlot += 90 + random.randint(1, 3)*15
             stack.append(s)
             continue
         if 510 <= s.getNextTimeSlot() <= 720 and s.getActivitiesAdded()["food"] == 1:
             s.events.append(event("Dinner", (s.getNextTimeSlot(), s.getNextTimeSlot() + 90), "food2"))
             s.getActivitiesAdded()["food"] = 2
-            s.nextTimeSlot += 125
+            s.nextTimeSlot += 90 + random.randint(1, 3)*15
             stack.append(s)
             continue
         for e in allEvents:
@@ -102,6 +103,8 @@ def generate(allEvents):
                 continue
             if s.getActivitiesAdded()[e[0]] == 2 or e[2] in s.getNames():
                 continue
+            if e[0] == "art" and s.getNextTimeSlot()+times["art"] >= 690:
+                continue
             finaltime = s.getNextTimeSlot() + times[e[0]]
             if s.getNextTimeSlot() < max(e[1][0], 0) or (int(finaltime) > int(e[1][1]) and e[1][1] != 0):
                 continue
@@ -110,7 +113,7 @@ def generate(allEvents):
                                     e[0]))
             newActivitiesAdded = s.getActivitiesAdded().copy()
             newActivitiesAdded[e[0]] += 1
-            nts = s.getNextTimeSlot() + times[e[0]] + 35
+            nts = s.getNextTimeSlot() + times[e[0]] + random.randint(1, 3)*15
             newnames = s.getNames().copy()
             newnames.append(e[2])
             snew = schedule(eventsNew, newActivitiesAdded, nts, newnames, 0)

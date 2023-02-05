@@ -112,7 +112,7 @@ def get_sample_schedule(results):
         value += "\n \n"
         counter += 1
     # return value
-    return schedules[0:5]
+    return schedules[0:201:100]
 
 def get_open_hours(startHour, endHour):
     nine_am = 9 * 60
@@ -126,7 +126,7 @@ def get_info(data, cat):
     hits=0
     print(data["businesses"])
     try:
-        for i in range(5):
+        for i in range(8):
             info_list.append((cat, hours_request(data["businesses"][counter]["id"]), data["businesses"][counter]["name"]))
             hits += 1
             counter+=1
