@@ -1,0 +1,14 @@
+        {% for schedule in get_sample_schedule(search_business('atlanta', ['music','history','bars','nature','art'])) %}
+          <li class="cd-schedule__group">
+            <div class="cd-schedule__top-info"><span>Monday</span></div>
+            <ul>
+              {% for event in schedule %}
+                <li class="cd-schedule__event">
+                  <a data-start="{{format_time(event.getTimeRange()[0])}}" data-end="{{format_time(event.getTimeRange()[1])}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                    <em class="cd-schedule__name">{{event.getName()}}</em>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}

@@ -16,12 +16,13 @@ class event:
 
 
 class schedule:
-    def __init__(self, events, activitiesAdded, nextTimeSlot, names):
+    def __init__(self, events, activitiesAdded, nextTimeSlot, names, points):
         # list of events(event objects), dict of activity types added, next time slot available
         self.events = events
         self.activitiesAdded = activitiesAdded
         self.nextTimeSlot = nextTimeSlot
         self.names = names
+        self.points = points
 
     def getEvents(self):
         return self.events
@@ -34,6 +35,8 @@ class schedule:
 
     def getNames(self):
         return self.names
+    def getPoints(self):
+        return self.points
 
 
 class e:
@@ -70,7 +73,7 @@ def generate(allEvents):
         "music": 0
     }
     finalSchedules = []
-    stack.append(schedule(eventsStart, activitiesAdded, 0, startnames))
+    stack.append(schedule(eventsStart, activitiesAdded, 0, startnames, 0))
     while (len(stack) != 0):
         s = stack.pop()
         if s.nextTimeSlot >= 900:
@@ -79,16 +82,18 @@ def generate(allEvents):
         if 120 <= s.getNextTimeSlot() <= 300 and s.getActivitiesAdded()["food"] == 0:
             s.events.append(event("Lunch", (s.getNextTimeSlot(), s.getNextTimeSlot() + 90), "food1"))
             s.getActivitiesAdded()["food"] = 1
-            s.nextTimeSlot += 35
+            s.nextTimeSlot += 125
             stack.append(s)
             continue
         if 510 <= s.getNextTimeSlot() <= 720 and s.getActivitiesAdded()["food"] == 1:
             s.events.append(event("Dinner", (s.getNextTimeSlot(), s.getNextTimeSlot() + 90), "food2"))
             s.getActivitiesAdded()["food"] = 2
-            s.nextTimeSlot += 35
+            s.nextTimeSlot += 125
             stack.append(s)
             continue
         for e in allEvents:
+            if "Goat" in e[2]:
+                print("HERE" + str(e[0])) 
             if e[0] == "food":
                 continue
             if (e[0] == "bars" or e[0] == "music") and s.getActivitiesAdded()["food"] != 2:
@@ -108,13 +113,12 @@ def generate(allEvents):
             nts = s.getNextTimeSlot() + times[e[0]] + 35
             newnames = s.getNames().copy()
             newnames.append(e[2])
-            snew = schedule(eventsNew, newActivitiesAdded, nts, newnames)
+            snew = schedule(eventsNew, newActivitiesAdded, nts, newnames, 0)
             stack.append(snew)
     return finalSchedules
 
 def rank(schedules, preferences):
     ranked = []
-    ranked.append((0, 0))
     for s in schedules:
         points = 0
         for i in range(5):
@@ -125,11 +129,12 @@ def rank(schedules, preferences):
                 points += 1.5*20*(i+1)
         counter = 0
         for r in ranked:
-            if r[0] <= points:
-                ranked.insert(counter, (points, s))
+            if r.getPoints() <= points:
+                ranked.insert(counter, s)
                 break
             counter+=1
-    ranked.remove((0, 0))
+        if counter == 0:
+            ranked.append(s)
     return ranked
 
 
