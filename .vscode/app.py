@@ -17,13 +17,14 @@ def rank():
     return render_template("rank.html")
 
 
+
+
 @app.route("/index", methods=["POST"])
 def index():
     #print(request.method)
     if request.method == "POST":
         location = request.form.get("location")
         keyword = request.form.get("keyword")
-
         # Make the API request to Yelp
         headers = {
             "accept": "application/json",
@@ -124,14 +125,14 @@ def get_info(data, cat):
     info_list = []
     counter=0
     hits=0
-    print(data["businesses"])
+    # print(data["businesses"])
     try:
         for i in range(8):
             info_list.append((cat, hours_request(data["businesses"][counter]["id"]), data["businesses"][counter]["name"]))
             hits += 1
             counter+=1
         # (cat, hours_request(data["businesses"][0]["id"]), data["businesses"][0]["name"])#, data["businesses"][0]["url"])
-        print(info_list)
+        # print(info_list)
     except IndexError:
         pass
     return info_list
@@ -149,9 +150,9 @@ def format_time(time):
 def schedule():
     
     location = request.form.get("location")
-    print(request.method)
+    # print(request.method)
     phone_number = request.form.get("phone")
-    print(request.method)
+    # print(request.method)
     # print(location)
     # print(phone_number)
     headers = {
@@ -168,18 +169,50 @@ def schedule():
     # Extract the relevant information from the API response
     businesses = data.get("businesses", [])
     #data = request.get_json()
-    print(request.method)
+    # print(request.method)
     #if request.method == "POST" or request.method == "GET":
         # Make the API request to Yelp
         
         #test_schedule = ('atlanta', [ 'music','history','bars','nature','art' ])
-    schedule_list = get_sample_schedule(search_business('new york city', ['music','history','bars','nature','art']))
-    try:
-        print(schedule_list[0]) 
-    except IndexError:
-        pass
+
+    location = request.form["location"]
+    phone = request.form["phone_number"]
+    list = [request.form["pref1"], request.form["pref2"], request.form["pref3"], request.form["pref4"], request.form["pref5"]]
+    elements = {
+        "6wb": "music",
+        "7ax": "history",
+        "7z4": "art",
+        "6j7": "bars",
+        "70x": "nature"
+    }
+    preferences = []
+    for i in list:
+        preferences.append(elements[i])
+    print(preferences)
+
+    # schedule_list = get_sample_schedule(search_business('new york city', ['music','history','bars','nature','art']))
+    schedule_list = get_sample_schedule(search_business(location, preferences))
+
     print(location)
     return render_template("schedule.html",format_time=format_time, businesses=businesses,location=location, phone_number=phone_number, search_business=search_business, get_sample_schedule=get_sample_schedule, schedule_list=schedule_list)
+
+# @app.route("/schedule", methods=["POST"])
+# def schedule():
+#     location = request.form["location"]
+#     phone = request.form["phone_number"]
+#     list = [request.form["pref1"], request.form["pref2"], request.form["pref3"], request.form["pref4"], request.form["pref5"]]
+#     elements = {
+#         "6wb": "music",
+#         "7ax": "history",
+#         "7z4": "art",
+#         "6j7": "bars",
+#         "70x": "nature"
+#     }
+#     preferences = []
+#     for i in list:
+#         preferences.append(elements[i])
+#     print(preferences)
+#     return render_template("schedule.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

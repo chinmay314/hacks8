@@ -118,6 +118,7 @@ h2 {
 }
 </style>
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- ===== BOX ICONS ===== -->
@@ -127,76 +128,74 @@ h2 {
 </head>
 
 <body>
-  <div style="text-align: center;">
-    <h2 style="margin-bottom: 20px;">Please enter the following information</h2>
-    <form action="/schedule" method="post">
-      <div style="margin-bottom: 10px;">
-        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" name="location" placeholder="Enter location">
-      </div>
-      <div>
-        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" name = "phone" placeholder="Enter phone number">
-      </div>
-  </div>  
-  <h2> Drag and Drop Cards in Order of Preference </h2>
-  
-  <div class="drop">
-    <div class="drop__container" id="drop-items">
-      <div class="drop__card">
-        <div class="drop__data">
-          <img src="../static/musicNotes.png" alt="" class="drop__img">
-          <div>
-            <h1 class="drop__name">Music</h1>
-            <span class="drop__profession">Concerts, Live Music, etc</span>
+  <form id="form" action="/schedule" method="post">
+    <div style="text-align: center;">
+      <h2 style="margin-bottom: 20px;">Please enter the following information</h2>
+        <div style="margin-bottom: 10px;">
+          <input type="text" name="location" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" placeholder="Enter location">
+        </div>
+        <div>
+          <input type="text" name="phone_number" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" placeholder="Enter phone number">
+        </div>
+    </div>  
+    <h2> Drag and Drop Cards in Order of Preference </h2>
+    
+    <div class="drop">
+      <div class="drop__container" name="list" id="drop-items">
+        <div class="drop__card">
+          <div class="drop__data">
+            <img src="../static/musicNotes.png" alt="" class="drop__img">
+            <div>
+              <h1 class="drop__name">Music</h1>
+              <span class="drop__profession">Concerts, Live Music, etc</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="drop__card">
-        <div class="drop__data">
-          <img src="../static/beer.jpeg" alt="" class="drop__img">
-          <div>
-            <h1 class="drop__name">Bars</h1>
-            <span class="drop__profession">Clubs, Night Life, etc</span>
+        <div class="drop__card">
+          <div class="drop__data">
+            <img src="../static/beer.jpeg" alt="" class="drop__img">
+            <div>
+              <h1 class="drop__name">Bars</h1>
+              <span class="drop__profession">Clubs, Night Life, etc</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="drop__card">
-        <div class="drop__data">
-          <img src="../static/calendar.png" alt="" class="drop__img">
-          <div>
-            <h1 class="drop__name">History</h1>
-            <span class="drop__profession">History Museums, Forts, etc</span>
+        <div class="drop__card">
+          <div class="drop__data">
+            <img src="../static/calendar.png" alt="" class="drop__img">
+            <div>
+              <h1 class="drop__name">History</h1>
+              <span class="drop__profession">History Museums, Forts, etc</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="drop__card">
-        <div class="drop__data">
-          <img src="../static/mountain.jpeg" alt="" class="drop__img">
-          <div>
-            <h1 class="drop__name">Nature</h1>
-            <span class="drop__profession">Hikes, Rivers, Trails, etc</span>
+        <div class="drop__card">
+          <div class="drop__data">
+            <img src="../static/mountain.jpeg" alt="" class="drop__img">
+            <div>
+              <h1 class="drop__name">Nature</h1>
+              <span class="drop__profession">Hikes, Rivers, Trails, etc</span>
+            </div>
           </div>
         </div>
-      </div>
-            <div class="drop__card">
-              <div class="drop__data">
-                <img src="../static/art.png" alt="" class="drop__img">
-                <div>
-                  <h1 class="drop__name">Art</h1>
-                  <span class="drop__profession">Art Museums, Studios, etc </span>
+              <div class="drop__card">
+                <div class="drop__data">
+                  <img src="../static/art.png" alt="" class="drop__img">
+                  <div>
+                    <h1 class="drop__name">Art</h1>
+                    <span class="drop__profession">Art Museums, Studios, etc </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div style="text-align: center;">
-              <button type="submit" style="border-radius: 25px; padding: 10px 20px;background-color: white;">Submit</button>
-            </div>
-          </form>
-
-          
-            
+              <div style="text-align: center;">
+                <button type="submit" id="myButton" style="border-radius: 25px; padding: 10px 20px;background-color: white;">Submit</button>
+              </div>            
+      </div>
     </div>
-  </div>
+  </form>
+
 
 
   <!--===== SORTABLE JS =====-->
@@ -205,12 +204,59 @@ h2 {
   <!--===== MAIN JS =====-->
   <script>
     const dropItems = document.getElementById('drop-items')
-
-    new Sortable(dropItems, {
-       animation: 350,
-       chosenClass: "sortable-chosen",
-       dragClass: "sortable-drag",
+    sortable = new Sortable(dropItems, {
+      animation: 350,
+      chosenClass: "sortable-chosen",
+      dragClass: "sortable-drag",
+      store:{
+        get: function (sortable) {
+          var order = localStorage.getItem(sortable.options.group.name);
+          return order ? order.split('|') : [];
+        },
+        /**
+          * Save the order of elements. Called onEnd (when the item is dropped).
+          * @param {Sortable}  sortable
+          */
+        set: function (sortable) {
+          var order = sortable.toArray();
+          localStorage.setItem(sortable.options.group.name, order.join('|'));
+        }
+      }
     });
+    function get (sortable) {
+          var order = localStorage.getItem(sortable.options.group.name);
+          return order ? order.split('|') : [];
+        }
+
+    var sortedList = get(sortable);
+    console.log(sortedList)
+    // function createString(){
+    //   alert("Hello")
+    // }
+    $("#form").submit( function(eventObj) {
+      sortedList = get(sortable)
+      $("<input />").attr("type", "hidden")
+          .attr("name", "pref1")
+          .attr("value", sortedList[0])
+          .appendTo("#form");
+        $("<input />").attr("type", "hidden")
+          .attr("name", "pref2")
+          .attr("value", sortedList[1])
+          .appendTo("#form");
+        $("<input />").attr("type", "hidden")
+          .attr("name", "pref3")
+          .attr("value", sortedList[2])
+          .appendTo("#form");
+        $("<input />").attr("type", "hidden")
+          .attr("name", "pref4")
+          .attr("value", sortedList[3])
+          .appendTo("#form");
+        $("<input />").attr("type", "hidden")
+          .attr("name", "pref5")
+          .attr("value", sortedList[4])
+          .appendTo("#form");
+      return true;
+  });
   </script>
 </body>
 
