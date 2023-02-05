@@ -12,6 +12,7 @@ app = Flask(__name__)
 # Replace YOUR_API_KEY with your Yelp API key
 API_KEY = "Kw3oLl3tz6AKaYRB-rVeDb37F_Jv_oqmll4XN7B87mMDIifOj9wMwAQxdNvj_-X8hwfb-47-LWnm1f2q03TN6PoVONJJnQg4R4cE2mEjdsNZmfQ9WWP1ZEGIAUvfY3Yx"
 
+
 @app.route("/")
 def rank():
     return render_template("rank.html")
@@ -93,7 +94,7 @@ def hours_request(id):
     #print(data_b["categories"])
     if(open != None):
         return get_open_hours(int(open['start']), int(open['end']))
-    return (0, 0)
+    return (0,0)
 
 
 def get_sample_schedule(results):
@@ -103,18 +104,16 @@ def get_sample_schedule(results):
     counter = 1
     temp = []
     for s in schedules:
-        points = s[0]
-        s = s[1]
         value += "Schedule " + str(counter) + ": \n"
         for e in s.getEvents():
             value += e.getName() + " from " + str(e.getTimeRange()[0]) + " to " + str(e.getTimeRange()[1]) + "\n"
             temp.append((e.getTimeRange()[0], e.getTimeRange()[1]))
 
-        value += str(points) + " points total"
+        value += str(s.getPoints()) + " points total"
         value += "\n \n"
         counter += 1
     # return value
-    return schedules
+    return schedules[0:5]
 
 def get_open_hours(startHour, endHour):
     nine_am = 9 * 60
@@ -124,21 +123,28 @@ def get_open_hours(startHour, endHour):
 
 def get_info(data, cat):
     info_list = []
-    for i in range(5):
-        info_list.append((cat, hours_request(data["businesses"][i]["id"]), data["businesses"][i]["name"]))
-     #(cat, hours_request(data["businesses"][0]["id"]), data["businesses"][0]["name"])#, data["businesses"][0]["url"])
-    #print(info_list)
+    counter=0
+    hits=0
+    print(data["businesses"])
+    try:
+        for i in range(5):
+            info_list.append((cat, hours_request(data["businesses"][counter]["id"]), data["businesses"][counter]["name"]))
+            hits += 1
+            counter+=1
+        # (cat, hours_request(data["businesses"][0]["id"]), data["businesses"][0]["name"])#, data["businesses"][0]["url"])
+        print(info_list)
+    except IndexError:
+        pass
     return info_list
 
 test_schedule = None
 
 def format_time(time):
-    minute=""
-    if time % 100 < 10:
-        minute= "0"+ str(time%100)
-    else:
-        minute = ""+ str(time%100)
-    return str(int(time/100)+9) +":"+minute
+    minute=''+str(time%60)
+    if(time%60<10):
+        minute='0'+minute
+    hour=(time-time%60)//60
+    return str(int(hour+9)) +":"+minute
 
 @app.route("/schedule", methods=["GET", "POST"])
 def schedule():
@@ -168,11 +174,13 @@ def schedule():
         # Make the API request to Yelp
         
         #test_schedule = ('atlanta', [ 'music','history','bars','nature','art' ])
-    message_to_send = ""
-    for i in range(5):
-        message_to_send += f"(test) Your Schedule \nMonday{i}\nTues{i}\nWed{i}\nThu{i}Fri{i}\n"
-    send_message(message_to_send, "7064616521")
-    return render_template("schedule.html",format_time=format_time, businesses=businesses,location=location, phone_number=phone_number, search_business=search_business, get_sample_schedule=get_sample_schedule)
+    schedule_list = get_sample_schedule(search_business('new york city', ['music','history','bars','nature','art']))
+    try:
+        print(schedule_list[0]) 
+    except IndexError:
+        pass
+    print(location)
+    return render_template("schedule.html",format_time=format_time, businesses=businesses,location=location, phone_number=phone_number, search_business=search_business, get_sample_schedule=get_sample_schedule, schedule_list=schedule_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
