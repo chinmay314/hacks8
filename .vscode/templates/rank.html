@@ -131,10 +131,10 @@ h2 {
     <h2 style="margin-bottom: 20px;">Please enter the following information</h2>
     <form action="/schedule" method="post">
       <div style="margin-bottom: 10px;">
-        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" placeholder="Enter location">
+        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" name="location" placeholder="Enter location">
       </div>
       <div>
-        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" placeholder="Enter phone number">
+        <input type="text" style="border-radius: 25px; padding: 15px 20px; border: 1px solid gray; width: 450px;" name = "phone" placeholder="Enter phone number">
       </div>
   </div>  
   <h2> Drag and Drop Cards in Order of Preference </h2>
@@ -193,27 +193,7 @@ h2 {
             </div>
           </form>
 
-          <script>
-            $(document).ready(function() {
-              $("#send-request").click(function() {
-                var data = {
-                  "location": "atlanta",
-                  "prefs": "[ 'music','history','bars','nature','art' ]"
-                };
-                
-                $.ajax({
-                  type: "POST",
-                  url: "/schedule",
-                  data: JSON.stringify(data),
-                  contentType: "application/json",
-                  success: function(response) {
-                    console.log(response);
-                  }
-                });
-              });
-            });
-          </script>
-          <button id="send-request">Send POST Request</button>
+          
             
     </div>
   </div>

@@ -38,7 +38,7 @@
         <li><span>18:00</span></li>
       </ul>
     </div> <!-- .cd-schedule__timeline -->
-  
+
     <div class="cd-schedule__events">
       <ul>
         <li class="cd-schedule__group">
@@ -46,13 +46,13 @@
   
           <ul>
             <li class="cd-schedule__event">
-              <a data-start={{test_schedule[0][0]}} data-end="10:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">{{test_schedule[0][0].getName()}}</em>
+              <a data-start="{{format_time(get_sample_schedule(search_business('atlanta', ['music','history','bars','nature','art']))[0][1].getEvents()[0].getTimeRange()[0])}}" data-end="12:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">{{ get_sample_schedule(search_business('atlanta', ['music','history','bars','nature','art']))[0][1].getEvents()[0].getName()}}</em>
               </a>
             </li>
   
             <li class="cd-schedule__event">
-              <a data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2" href="#0">
+              <a data-start="11:30" data-end="13:00" data-content="event-rowing-workout" data-event="event-2" href="#0">
                 <em class="cd-schedule__name">Rowing Workout</em>
               </a>
             </li>
@@ -201,6 +201,7 @@
   
     <div class="cd-schedule__cover-layer"></div>
   </div> <!-- .cd-schedule -->
+  <p>{{ get_sample_schedule(search_business('atlanta', ['music','history','bars','nature','art']))[0][1].getEvents()[0].getName()}}</p>
 
   <script src="../static/util.js"></script> <!-- util functions included in the CodyHouse framework -->
   <script src="../static/main.js"></script>

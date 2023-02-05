@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import requests
 import json
 import datetime
@@ -12,13 +12,14 @@ app = Flask(__name__)
 API_KEY = "G0Sc2cgk4qWgBTWY4B17uUaYfaX6YbqnFBwm1KtuqQW25MzaMKPJJY50tJsybkJjnX3ZuoVsEVEK2tlsLlisA5tuV7gBFCE7rFP5_dq01VNrZZW4vgwidCFN5sjdY3Yx"
 
 
-@app.route("/index")
+@app.route("/")
 def rank():
-    return render_template("index.html")
+    return render_template("rank.html")
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["POST"])
 def index():
+    #print(request.method)
     if request.method == "POST":
         location = request.form.get("location")
         keyword = request.form.get("keyword")
@@ -38,7 +39,7 @@ def index():
         # Extract the relevant information from the API response
         businesses = data.get("businesses", [])
 
-        return render_template("index.html", businesses=businesses, data=data, hours=hours_request, search_business=search_business, get_sample_schedule=get_sample_schedule)
+        return render_template("schedule.html", businesses=businesses, data=data, hours=hours_request, search_business=search_business, get_sample_schedule=get_sample_schedule)
 
     return render_template("rank.html")
 
@@ -69,10 +70,10 @@ def search_business(location, cats):
             # print(data) # remove later
 
             # Extract the relevant information from the API response
-            print(data)
+            #print(data)
             results += get_info(data, cat)
     
-    print(results)
+    #print(results)
     return results
 
 
@@ -107,13 +108,13 @@ def get_sample_schedule(results):
         value += "Schedule " + str(counter) + ": \n"
         for e in s.getEvents():
             value += e.getName() + " from " + str(e.getTimeRange()[0]) + " to " + str(e.getTimeRange()[1]) + "\n"
-            temp.append((e.getTimeRange()[0]), e.getTimeRange()[1])
+            temp.append((e.getTimeRange()[0], e.getTimeRange()[1]))
 
         value += str(points) + " points total"
         value += "\n \n"
         counter += 1
     # return value
-    return temp
+    return schedules
 
 def get_open_hours(startHour, endHour):
     nine_am = 9 * 60
@@ -130,21 +131,45 @@ def get_info(data, cat):
     return info_list
 
 test_schedule = None
+
+def format_time(time):
+    minute=""
+    if time % 100 < 10:
+        minute= "0"+ str(time%100)
+    else:
+        minute = ""+ str(time%100)
+    return str(int(time/100)+9) +":"+minute
+
 @app.route("/schedule", methods=["GET", "POST"])
 def schedule():
-    # location = request.form['location']
-    # phone_number = request.form['phone_number']
+    
+    location = request.form.get("location")
+    print(request.method)
+    phone_number = request.form.get("phone")
+    print(request.method)
     # print(location)
     # print(phone_number)
-    if request.method == "POST":
+    headers = {
+            "accept": "application/json",
+            "Authorization": "Bearer " + API_KEY
+        }
+    params = {
+            "keyword": ['music','history','bars','nature','art'],
+            "location": location
+    }
+    response = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
+    data = response.json()
 
+    # Extract the relevant information from the API response
+    businesses = data.get("businesses", [])
+    #data = request.get_json()
+    print(request.method)
+    #if request.method == "POST" or request.method == "GET":
         # Make the API request to Yelp
-        data = request.get_json()
-        test_schedule = search_business('atlanta', [ 'music','history','bars','nature','art' ])
-
-        return render_template("schedule.html", test_schedule=test_schedule, get_sample_schedule=get_sample_schedule, search_business=search_business)
-
-    return render_template("rank.html")
+        
+        #test_schedule = ('atlanta', [ 'music','history','bars','nature','art' ])
+    print(location)
+    return render_template("schedule.html",format_time=format_time, businesses=businesses,location=location, phone_number=phone_number, search_business=search_business, get_sample_schedule=get_sample_schedule)
 
 if __name__ == "__main__":
     app.run(debug=True)
