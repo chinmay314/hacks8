@@ -148,14 +148,21 @@ def rank(schedules, preferences):
 
 
 
+def format_time(time):
+    minute=''+str(time%60)
+    if(time%60<10):
+        minute='0'+minute
+    hour=(time-time%60)//60
+    return str(int(hour+9)) +":"+minute
 
 def to_string(schedule):
-    value = ""
+    texts = []
     counter = 1
     for e in schedule.getEvents():
-        value += "Event #" + str(counter) + ": \n" + e.getName() + " from " + str(e.getTimeRange()[0]) + " to " + str(e.getTimeRange()[1]) + "\n"
+        value = "Event #" + str(counter) + ": \n" + "Name: \n" + e.getName() + "\n" + "Time: \n" + format_time(e.getTimeRange()[0]) + " to " + format_time(e.getTimeRange()[1]) + "\n"
+        texts.append(value)
         counter+=1
-    print(value)
+    return texts
 
 
 schedules = generate(allEvents)

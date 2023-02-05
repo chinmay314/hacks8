@@ -8,6 +8,7 @@ from sys import stderr
 from msg_app import send_message
 from twilio.rest import Client
 from msg_app import *
+import time
 
 app = Flask(__name__)
 
@@ -21,15 +22,26 @@ def rank():
 
 
 phone = None
+schedules=None
 @app.route("/confirmation", methods=["GET", 'POST'])
 def confirmation():
     global phone
-    # print(phone)
-    # send_message('test',phone)
-
+    global schedules
+    print(phone)
     if request.method == "POST":
-        print("hello");
-        print(request.form.get('id'));
+        print("hello")
+        myID = int(request.form.get('id'))
+        print(myID)
+        print(schedules[myID])
+        texts = gen.to_string(schedules[myID])
+        print("=============")
+        # send_message(texts[0],phone)
+        for t in texts:
+            time.sleep(0.5)
+            print(t)
+            send_message(t ,phone)
+
+            
 
     return render_template("confirmation.html")
 
@@ -112,6 +124,7 @@ def hours_request(id):
 
 
 def get_sample_schedule(results, prefs):
+    global schedules
     schedules = gen.generate(results)
     # schedules = gen.rank(schedules, ["art", "nature", "music", "bars", "history"])
     schedules = gen.rank(schedules, prefs)

@@ -49,38 +49,38 @@
 
     <div class="cd-schedule__events">
       <ul>
+        <script>
 
+          $(document).ready(function(){
+            $("#0").click(function(){
+              $.post('/confirmation', {'id': 0}, function(response){
+
+              });
+            });
+            $("#100").click(function(){
+              $.post('/confirmation', {'id': 100}, function(response){
+
+              });
+            });
+            $("#200").click(function(){
+              $.post('/confirmation', {'id': 200}, function(response){
+
+              });
+            });              
+          });
+          // function sendPostRequest(url) {
+          //   $("#form").submit(function(eventOjb){})
+          //   let myId = event.srcElement.id
+          //   $("<input />").attr("type", "hidden")
+          //   .attr("name", "id")
+          //   .attr("value", myId)
+          //   .appendTo("#form")
+          // }
+        </script>
         {% for schedule in schedule_list %}
         <li class="cd-schedule__group">
           <div class="cd-schedule__top-info"><span> <a href="/confirmation" type="submit" id="{{schedule.id}}" onclick="sendPostRequest('/confirmation')">Pick Schedule</a></span></div>
-          <script>
 
-            $(document).ready(function(){
-              $("#0").click(function(){
-                $.post('/confirmation', {'id': 0}, function(response){
-
-                });
-              });
-              $("#100").click(function(){
-                $.post('/confirmation', {'id': 100}, function(response){
-
-                });
-              });
-              $("#200").click(function(){
-                $.post('/confirmation', {'id': 200}, function(response){
-
-                });
-              });              
-            });
-            // function sendPostRequest(url) {
-            //   $("#form").submit(function(eventOjb){})
-            //   let myId = event.srcElement.id
-            //   $("<input />").attr("type", "hidden")
-            //   .attr("name", "id")
-            //   .attr("value", myId)
-            //   .appendTo("#form")
-            // }
-          </script>
 
 
           <ul>
