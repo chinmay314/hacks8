@@ -28,7 +28,9 @@ def schedule():
     print(preferences)
     return render_template("schedule.html")
 
-
+@app.route("/confirmation", methods=["GET"])
+def confirmation():
+    return render_template("confirmation.html")
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
